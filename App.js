@@ -54,7 +54,13 @@ export default function App() {
          />
          { (userLoggedIn === true )
            // User has logged in so display another tab for Logout
-          && <Tab.Screen name="Logout" component={LogoutScreen} /> }
+           && <Tab.Screen name="Logout" component={LogoutScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Icon name="user-o" color={color} size={size} />
+                ),
+            }}/>
+          }
        </Tab.Navigator>
     </NavigationContainer>
   );
