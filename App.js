@@ -6,8 +6,13 @@ import { StyleSheet, Text, SafeAreaView } from 'react-native';
 // Screens imports
 import NowPlayingScreen from './screens/NowPlayingScreen';
 import MyPurchases from './screens/MyPurchases';
+import LogoutScreen from './screens/LogoutScreen';
 // Vector Icons
 import Icon from 'react-native-vector-icons/FontAwesome';
+//Firebase Imports
+import {auth} from "./FirebaseApp";
+// get the functions from the Firebase Auth library
+import {  onAuthStateChanged } from "firebase/auth";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +22,15 @@ export default function App() {
   
   useEffect(()=>{
   // code to check if there is a logged in user
-  },[])
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      console.log('Authenticated now!');
+      setUserLoggedIn(true); //log the user 
+    } else {
+      setUserLoggedIn(false); //log out
+    }
+  });
+  }, [])
 
   return (
     <NavigationContainer>
@@ -39,9 +52,9 @@ export default function App() {
               ),
             }}
          />
-         {/* { (userLoggedIn === true )
+         { (userLoggedIn === true )
            // User has logged in so display another tab for Logout
-          && <Tab.Screen name="Logout" component={Logout} /> } */}
+          && <Tab.Screen name="Logout" component={LogoutScreen} /> }
        </Tab.Navigator>
     </NavigationContainer>
   );
