@@ -19,7 +19,7 @@ const MyPurchases = ({navigation}) => {
 
    // -------------- State Variables -------------------
    const [currentUser, setCurrentUserId] = useState("");
-   const [loading, setLoading] = useState(true);
+   const [loading, setLoading] = useState(false);
    const [viewsToRender, setViewsToRender] = useState();
    const [purchasesList, setPurchasesList] = useState([]);
 
@@ -48,12 +48,19 @@ const MyPurchases = ({navigation}) => {
       console.log(`user: ${currentUser}`);
       await onSnapshot(q, (snapshot) => {
         console.log(`user: ${currentUser}`);
-        console.log(`ID: ${snapshot.size}`);
-        setPurchasesList(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id}))); 
-        setLoading(false);
+        if(snapshot.size === 0){
+          setViewsToRender(
+            <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
+              <Text style={styles.screenHeading}> No tickets found! 🕵️</Text>
+              <Text>Once you buy your tickets, they'll appear here. </Text>
+            </View>
+          )
+        } else {
+          setViewsToRender();
+          setPurchasesList(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id}))); 
+        }
       });
     } catch(err){
-      setLoading(false);
       console.log(`Error while fetching data from Firestore: ${err.message}`);
     }
   };
@@ -82,8 +89,11 @@ const MyPurchases = ({navigation}) => {
    
           getPurchasesFromFirestore();
 
+          setLoading(true);
+
         } else {
           // logged out user so display login button
+          setLoading(false);
           setViewsToRender(
             <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
                <Text> You must be logged in to view this feature.</Text>
@@ -92,21 +102,8 @@ const MyPurchases = ({navigation}) => {
                </Pressable>
             </View>
           )
-          setLoading(false);
         }
       });
-     
-      { loading ? setViewsToRender(
-            
-        <Text>...loading</Text>
-      ) : 
-        setViewsToRender(
-          <FlatList 
-          data={purchasesList}
-          keyExtractor={ (item) => item.id}
-          renderItem={renderItem}
-          /> 
-        ) }
     
       return () => {
         setViewsToRender(); // To clear out the "Can't perform a React state update on an unmounted component." error
@@ -118,6 +115,13 @@ const MyPurchases = ({navigation}) => {
      <SafeAreaView style={styles.container}>
         <Text style={styles.screenHeading}>Your Tickets</Text>
         {viewsToRender}
+        {
+          loading ?  <FlatList 
+          data={purchasesList}
+          keyExtractor={ (item) => item.id}
+          renderItem={renderItem}
+        />  : null
+        }
      </SafeAreaView>
   )
 }
