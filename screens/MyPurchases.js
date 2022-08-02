@@ -4,7 +4,7 @@ import { StyleSheet, Text, SafeAreaView, View, Pressable } from 'react-native';
 import {auth} from "../FirebaseApp";
 // get the functions from the Firebase Auth library
 import {  onAuthStateChanged } from "firebase/auth";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyPurchases = ({navigation}) => {
 
@@ -37,6 +37,9 @@ const MyPurchases = ({navigation}) => {
           )
         }
       });
+      return () => {
+        setViewsToRender(); // To clear out the "Can't perform a React state update on an unmounted component." error
+      };
    }, [])
 
 
