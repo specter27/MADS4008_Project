@@ -28,7 +28,7 @@ const BuyTicketScreen = ({navigation, route}) => {
   useEffect( () => {
     console.log("BuyTicketScreen Loaded")
     
-    // 1. Set the state variables with the email & name values from the route params
+    // 1. Set the state variables with the email & userId values from the firebase auth variable
     setUserEmail(auth.currentUser.email)
     setCurrentUserId(auth.currentUser.uid)
 
@@ -61,7 +61,7 @@ const BuyTicketScreen = ({navigation, route}) => {
     try {
         const purchaseToBeAdded = {
             movieId: movie_id,
-            moviewName: movie_title,
+            movieName: movie_title,
             nameOnPurchase: userName, 
             numTickets: parseInt(numberOfTickets),   // Int
             total: parseInt( purchaseTotal.toFixed(2) ), // Int
@@ -75,7 +75,9 @@ const BuyTicketScreen = ({navigation, route}) => {
         // 2. Display Alert message for Purchase Success
         Alert.alert("Purchase Success!");
 
-        // 3. TODO: Redirect the user to the NowPlayingScreen
+        // 3. Redirect the user to the NowPlayingScreen
+        navigation.navigate("NowPlaying");
+
     }
     catch (err) {
         console.log(`${err.message}`)
@@ -159,8 +161,6 @@ const BuyTicketScreen = ({navigation, route}) => {
                 </View>
 
             </View>
-           
-
         }
 
         <View style={styles.purchaseButtonContainer}>
@@ -168,8 +168,7 @@ const BuyTicketScreen = ({navigation, route}) => {
                 <Text style={styles.buttonText2}>Confirm Purchase</Text>
             </Pressable>
         </View>
-        
-            
+           
     </SafeAreaView>
   )
 
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
         marginHorizontal:20,
         alignItems:"center",
         marginBottom:30,
-        marginTop: 50,
+        marginTop: 30,
         borderRadius:10,
     },
     purchaseButtonContainer: {

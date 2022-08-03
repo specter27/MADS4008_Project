@@ -96,23 +96,27 @@ const MovieDetailScreen = ({navigation, route}) => {
         <Text style={styles.overview}>{selectedMovie.overview}</Text>
       </View>
       
+      {/* Buttons Section */}
+      <View style={styles.buttonsContainer}>
+          {/* Conditional Rendering for the Info Message for logging In */}
+          { (!userLoggedIn) && 
+              <Text style={styles.info}>{infoMessage}</Text>
+          }
+          <Pressable disabled={!userLoggedIn} 
+            style={[styles.buyTicketButton, { backgroundColor: !userLoggedIn ? '#A9A9A9' : '#3330e3' }]}
+            onPress={ navigateToNextScreen }>
+              <Text style={styles.buttonText}>Buy Tickets</Text>
+          </Pressable>
+        
+          {/* Conditional Rendering for the Login & SignUp Button */}
+          {(!userLoggedIn) && 
+            <Pressable style={styles.loginButton} onPress={ navigateToLoginScreen }>
+              <Text style={styles.buttonText} >Login or Create New Account</Text>
+            </Pressable>
+          }
 
-       {/* Conditional Rendering for the Info Message for logging In */}
-       {(!userLoggedIn) && 
-          <Text style={styles.info}>{infoMessage}</Text>
-       }
-      <Pressable disabled={!userLoggedIn} 
-        style={[styles.buyTicketButton, { backgroundColor: !userLoggedIn ? '#A9A9A9' : '#3330e3' }]}
-        onPress={ navigateToNextScreen }>
-           <Text style={styles.buttonText}>Buy Tickets</Text>
-      </Pressable>
-     
-      {/* Conditional Rendering for the Login & SignUp Button */}
-      {(!userLoggedIn) && 
-        <Pressable style={styles.loginButton} onPress={ navigateToLoginScreen }>
-           <Text style={styles.buttonText} >Login or Create New Account</Text>
-        </Pressable>
-      }
+      </View>
+      
             
     </SafeAreaView>
   )
@@ -169,6 +173,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '300'
   },
+  buttonsContainer:{
+    
+  },
   info:{
     fontSize: 18,
     fontWeight: '300',
@@ -193,7 +200,7 @@ const styles = StyleSheet.create({
     marginHorizontal:20,
     alignItems:"center",
     marginBottom:30,
-    borderRadius:10,
+    borderRadius:10
   },
   buttonText:{
     color: '#fff',

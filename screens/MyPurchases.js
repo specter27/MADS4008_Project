@@ -2,15 +2,10 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, SafeAreaView, View, Pressable, FlatList } from 'react-native';
 //Firebase Imports
 import {auth, db} from "../FirebaseApp";
+
 // get the functions from the Firebase Auth library
-import {  onAuthStateChanged } from "firebase/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  collection,
-  query, where,
-  onSnapshot,
-  getDocs,
-} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 // Vector Icons
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -45,20 +40,20 @@ const MyPurchases = ({navigation}) => {
     const purchasesCollectionRef = collection(db, "purchases");
     const q = query(purchasesCollectionRef, where("userId", "==", currentUser));
     try{
-      console.log(`user: ${currentUser}`);
-      await onSnapshot(q, (snapshot) => {
         console.log(`user: ${currentUser}`);
-        if(snapshot.size === 0){
-          setViewsToRender(
-            <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
-              <Text style={styles.screenHeading}> No tickets found! 🕵️</Text>
-              <Text>Once you buy your tickets, they'll appear here. </Text>
-            </View>
-          )
-        } else {
-          setViewsToRender();
-          setPurchasesList(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id}))); 
-        }
+        await onSnapshot(q, (snapshot) => {
+          console.log(`user: ${currentUser}`);
+            if(snapshot.size === 0){
+              setViewsToRender(
+                <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
+                  <Text style={styles.screenHeading}> No tickets found! 🕵️</Text>
+                  <Text>Once you buy your tickets, they'll appear here. </Text>
+                </View>
+              )
+          } else {
+            setViewsToRender();
+            setPurchasesList(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id}))); 
+          }
       });
     } catch(err){
       console.log(`Error while fetching data from Firestore: ${err.message}`);
@@ -116,10 +111,11 @@ const MyPurchases = ({navigation}) => {
         <Text style={styles.screenHeading}>Your Tickets</Text>
         {viewsToRender}
         {
-          loading ?  <FlatList 
-          data={purchasesList}
-          keyExtractor={ (item) => item.id}
-          renderItem={renderItem}
+          loading ?  
+          <FlatList 
+            data={purchasesList}
+            keyExtractor={ (item) => item.id}
+            renderItem={renderItem}
         />  : null
         }
      </SafeAreaView>
@@ -164,7 +160,7 @@ const styles = StyleSheet.create({
      borderBottomWidth:1,
    },
    movieName : {
-     fontSize:18,
+     fontSize:20,
      marginBottom:2,
    },
    total: {
