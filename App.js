@@ -40,11 +40,14 @@ export default function App() {
               name="NowPlaying"
               component={NowPlayingScreen}
           />
+          { 
+          !userLoggedIn &&
           <Stack.Screen name="Login"
               component={LoginScreen}
               options={() => ({
                 headerBackTitle: "Back",
-              })} />
+              })} /> 
+          }
           <Stack.Screen 
               component={MovieDetailScreen}
               name="MovieDetail" 
