@@ -98,7 +98,7 @@ const MyPurchases = ({navigation}) => {
             <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
                <Text> You must be logged in to view this feature.</Text>
                <Pressable style={styles.loginButton} onPress={loginPressed}>
-                  <Text style={styles.buttonText}> Log in or Create New Account</Text>
+                  <Text style={styles.buttonText}> Login or Create New Account</Text>
                </Pressable>
             </View>
           )

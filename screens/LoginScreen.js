@@ -1,16 +1,35 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { StyleSheet, Text, SafeAreaView,  TextInput, View, Pressable} from 'react-native';
 // Firebase imports
 import {auth} from "../FirebaseApp";
 // get the functions from the Firebase Auth library
 import { createUserWithEmailAndPassword , signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({navigation, route}) => {
 
     // ------- State Variables ---------------
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState("");
+    const [movieSelectedByUser, setMovieSelectedByUser] = useState({});
+   
+    // ------------------------ Route Params -----------------------------
+
+    // ------------------------ Lifecycle Hooks ---------------------------
+    useEffect( () => {
+
+        console.log("Login Screen Loaded")
+        if(route.params) {
+            console.log("Login Screen is supplied with the [selectedMovie] param in the route")
+           
+            // 1. Set the movieSelectedByUser with the [selectedMovie] param value from the route
+            setMovieSelectedByUser(route.params.selectedMovie)
+        } else{
+            console.log("Login Screen is NOT supplied with the [selectedMovie] param in the route")
+        }
+
+    }, []);
+   
 
     // ---------  Event listeners ------------
     const loginPressed = async() => {
@@ -18,7 +37,19 @@ const LoginScreen = ({navigation}) => {
         try {     
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             console.log(`User is logged in. Username is: ${userCredential.user.email}`)
-            navigation.navigate("MyPurchases");
+            console.log(Object.keys(movieSelectedByUser).length)
+
+            // Conditional Navigation After Authenticating the User
+            if(Object.keys(movieSelectedByUser).length === 0){
+                
+                console.log("Navigating to the MyPurchasesScreen")
+                navigation.navigate("MyPurchases");
+            } else if (Object.keys(movieSelectedByUser).length > 0) {
+
+                console.log("Navigating to the MovieDetailScreen")
+                navigation.navigate("MovieDetail", { selectedMovie: movieSelectedByUser })
+            }
+            
           } catch (err) {
             console.log(`Error when logging user ${err.message}`)
             setErrors(err.message) // displays errors to the UI
