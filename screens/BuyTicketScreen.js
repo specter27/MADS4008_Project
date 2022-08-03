@@ -64,7 +64,7 @@ const BuyTicketScreen = ({navigation, route}) => {
             movieName: movie_title,
             nameOnPurchase: userName, 
             numTickets: parseInt(numberOfTickets),   // Int
-            total: parseInt( purchaseTotal.toFixed(2) ), // Int
+            total: parseFloat( purchaseTotal.toFixed(2) ), // Int
             userId: currentUserId
         }
         console.log(`Attemping to Add: `)
@@ -157,7 +157,7 @@ const BuyTicketScreen = ({navigation, route}) => {
                     <Text style={styles.orderSummaryElement}>Number of Tickets: {numberOfTickets}</Text>
                     <Text style={styles.orderSummaryElement}>Subtotal: ${purchaseSubTotal.toFixed(2)}</Text>
                     <Text style={styles.orderSummaryElement}>Tax: ${purchaseTax.toFixed(2)}</Text>
-                    <Text style={styles.purchaseTotalElement}>Subtotal: ${purchaseTotal.toFixed(2)}</Text>
+                    <Text style={styles.purchaseTotalElement}>Total: ${purchaseTotal.toFixed(2)}</Text>
                 </View>
 
             </View>
