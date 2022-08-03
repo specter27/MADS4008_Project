@@ -43,7 +43,7 @@ const LoginScreen = ({navigation, route}) => {
             if(Object.keys(movieSelectedByUser).length === 0){
                 
                 console.log("Navigating to the MyPurchasesScreen")
-                navigation.navigate("MyPurchases");
+                navigation.navigate("NowPlaying");
             } else if (Object.keys(movieSelectedByUser).length > 0) {
 
                 console.log("Navigating to the MovieDetailScreen")
@@ -64,7 +64,7 @@ const LoginScreen = ({navigation, route}) => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
             console.log("Account creation success")
             console.log(userCredential)
-            navigation.navigate("MyPurchases");
+            navigation.navigate("NowPlaying");
         } catch (err) {
             console.log(`Error when creating user ${err.message}`)
             setErrors(err.message) // displays errors to the UI

@@ -44,6 +44,7 @@ const MyPurchases = ({navigation}) => {
         await onSnapshot(q, (snapshot) => {
           console.log(`user: ${currentUser}`);
             if(snapshot.size === 0){
+              setPurchasesList([]); //clearing the list since we don't have any tickets
               setViewsToRender(
                 <View style={{alignItems:"center", justifyContent:"center", flex:1}}>
                   <Text style={styles.screenHeading}> No tickets found! 🕵️</Text>
@@ -70,7 +71,6 @@ const MyPurchases = ({navigation}) => {
    }
 
    // -------------- Use Effect -------------------
-   let count = 0;
    useEffect(()=>{
       // code to check if there is a logged in user
       onAuthStateChanged(auth, user => {
