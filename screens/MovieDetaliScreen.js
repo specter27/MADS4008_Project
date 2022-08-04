@@ -82,11 +82,12 @@ const MovieDetailScreen = ({navigation, route}) => {
       <Image source={ {uri: generateImageURL()} } style={styles.posterImage}/>
      
       <View style={styles.inlineContainer}>
-        <Text style={styles.movieTitle}>{selectedMovie.name}</Text>
-        <View style={styles.movieRating}>
-          <Text style={styles.votingAvg}>{parseFloat(selectedMovie.rating)*10}%</Text>
-          <Icon name="star" color='#FAD02C' size={26} />
-        </View>   
+        
+          <Text style={styles.movieTitle}>{selectedMovie.name}</Text>
+          <View style={styles.movieRating}>
+            <Text style={styles.votingAvg}>{parseFloat(selectedMovie.rating)*10}%</Text>
+            <Icon name="star" color='#FAD02C' size={26} />
+          </View>   
       </View>
       <Text style={styles.releaseDate}>{selectedMovie.releaseDate}</Text>
 
@@ -141,8 +142,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   movieTitle:{
+    flex: 1,
     fontSize: 24,
     fontWeight: '600',
+    flexWrap: 'wrap'
   },
   movieRating: {
     flexDirection: 'row',
