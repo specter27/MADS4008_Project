@@ -59,7 +59,7 @@ const BuyTicketScreen = ({navigation, route}) => {
 
     // 1. Add the purchase in the Firebase (firestore)
     // - Form validation - Check for number tickets AND name
-    if(numberOfTickets > 0  && userName.trim() !== "" && userEmail.trim() !== ""){
+    if(numberOfTickets > 0  && userName.trim() !== ""){
         try {
             const purchaseToBeAdded = {
                 movieId: movie_id,
@@ -125,6 +125,7 @@ const BuyTicketScreen = ({navigation, route}) => {
                 autoCapitalize="none"
                 placeholder="Enter Email"
                 value={userEmail}
+                editable={false}
                 onChangeText={setUserEmail}
             /> 
             <Text style={styles.titleLabel}>Your name: </Text>
