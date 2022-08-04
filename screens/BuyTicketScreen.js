@@ -58,31 +58,36 @@ const BuyTicketScreen = ({navigation, route}) => {
     console.log("purchasedButton Clicked")
     
     // 1. Add the purchase in the Firebase (firestore)
-    try {
-        const purchaseToBeAdded = {
-            movieId: movie_id,
-            movieName: movie_title,
-            nameOnPurchase: userName, 
-            numTickets: parseInt(numberOfTickets),   // Int
-            total: parseFloat( purchaseTotal.toFixed(2) ), // Int
-            userId: currentUserId
+    // - Form validation - Check for number tickets AND name
+    if(numberOfTickets > 0  && userName.trim() !== ""){
+        try {
+            const purchaseToBeAdded = {
+                movieId: movie_id,
+                movieName: movie_title,
+                nameOnPurchase: userName, 
+                numTickets: parseInt(numberOfTickets),   // Int
+                total: parseFloat( purchaseTotal.toFixed(2) ), // Float
+                userId: currentUserId
+            }
+            console.log(`Attemping to Add: `)
+            console.log(purchaseToBeAdded)
+            const insertedDocument =  await addDoc(collection(db, "purchases"), purchaseToBeAdded)
+            console.log(`Document created, id is: ${insertedDocument.id}`)
+
+            // 2. Display Alert message for Purchase Success
+            Alert.alert("Purchase Success!");
+
+            // 3. Redirect the user to the NowPlayingScreen
+            navigation.navigate("NowPlaying");
+
         }
-        console.log(`Attemping to Add: `)
-        console.log(purchaseToBeAdded)
-        const insertedDocument =  await addDoc(collection(db, "purchases"), purchaseToBeAdded)
-        console.log(`Document created, id is: ${insertedDocument.id}`)
-
-        // 2. Display Alert message for Purchase Success
-        Alert.alert("Purchase Success!");
-
-        // 3. Redirect the user to the NowPlayingScreen
-        navigation.navigate("NowPlaying");
-
+        catch (err) {
+            console.log(`${err.message}`)
+        }
+    } else {
+        // - Display error alert
+        Alert.alert("All form fields must be filled before purchasing a ticket!")
     }
-    catch (err) {
-        console.log(`${err.message}`)
-    }
-
   }
   // ---------------------- Helper Functions ----------------------------
 
@@ -234,8 +239,8 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         width:30,
         textAlign: 'center',
-        paddingTop: 10
-
+        paddingTop: 16,
+        marginHorizontal:6,
     },
     purchaseButton : {
         backgroundColor: "#3330e3",
