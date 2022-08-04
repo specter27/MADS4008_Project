@@ -13,6 +13,7 @@ const BuyTicketScreen = ({navigation, route}) => {
   const [currentUserId, setCurrentUserId] = useState("")
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
+  const [errors, setErrors] = useState("");
   const [numberOfTickets, setNumberOfTickets] = useState(0)
   const [purchaseSubTotal, setPurchaseSubTotal] = useState(0)
   const [purchaseTax, setPurchaseTax] = useState(0)
@@ -57,31 +58,36 @@ const BuyTicketScreen = ({navigation, route}) => {
   const purchasedButtonClicked = async () => {
     console.log("purchasedButton Clicked")
     
-    // 1. Add the purchase in the Firebase (firestore)
-    try {
-        const purchaseToBeAdded = {
-            movieId: movie_id,
-            movieName: movie_title,
-            nameOnPurchase: userName, 
-            numTickets: parseInt(numberOfTickets),   // Int
-            total: parseFloat( purchaseTotal.toFixed(2) ), // Int
-            userId: currentUserId
+    if ( validateInput() ) {
+
+        // 1. Add the purchase in the Firebase (firestore)
+        try {
+            const purchaseToBeAdded = {
+                movieId: movie_id,
+                movieName: movie_title,
+                nameOnPurchase: userName, 
+                numTickets: parseInt(numberOfTickets),   // Int
+                total: parseFloat( purchaseTotal.toFixed(2) ), // Int
+                userId: currentUserId
+            }
+            console.log(`Attemping to Add: `)
+            console.log(purchaseToBeAdded)
+            const insertedDocument =  await addDoc(collection(db, "purchases"), purchaseToBeAdded)
+            console.log(`Document created, id is: ${insertedDocument.id}`)
+
+            // 2. Display Alert message for Purchase Success
+            Alert.alert("Purchase Success!");
+
+            // 3. Redirect the user to the NowPlayingScreen
+            navigation.navigate("NowPlaying");
+
         }
-        console.log(`Attemping to Add: `)
-        console.log(purchaseToBeAdded)
-        const insertedDocument =  await addDoc(collection(db, "purchases"), purchaseToBeAdded)
-        console.log(`Document created, id is: ${insertedDocument.id}`)
-
-        // 2. Display Alert message for Purchase Success
-        Alert.alert("Purchase Success!");
-
-        // 3. Redirect the user to the NowPlayingScreen
-        navigation.navigate("NowPlaying");
+        catch (err) {
+            console.log(`${err.message}`)
+        }
 
     }
-    catch (err) {
-        console.log(`${err.message}`)
-    }
+   
 
   }
   // ---------------------- Helper Functions ----------------------------
@@ -103,8 +109,22 @@ const BuyTicketScreen = ({navigation, route}) => {
     console.log(`PurchaseSubTotal: ${purchaseSubTotal}`)
     setPurchaseTax(tax)
     setPurchaseTotal(total)
-
   }
+
+  const validateInput = () => {
+    console.log("Validating the userEmail AND userName")
+    let result = true
+    if(userEmail.trim() === "" || userName.trim() === ""){
+
+        // Set error message
+        console.log(`Error Please provide valid values for the fields`)
+        // displays errors to the UI
+        setErrors("ERROR: Please provide valid values for the fields")
+        result = false
+    }
+    return result
+  }
+
 
   // ------------------------ View Template -----------------------
   return (
@@ -131,6 +151,13 @@ const BuyTicketScreen = ({navigation, route}) => {
                 onChangeText={setUserName}
             /> 
         </View>
+        {/* Errors Message Section */}
+        { errors ?  
+            <View style={styles.errors}>
+                <Text style={styles.errorText}>{errors}</Text>
+            </View>
+            : null 
+        }
 
         {/* Number of Ticket Section */}
         <Text style={styles.titleLabel}>Number of Tickets: </Text>
@@ -211,6 +238,16 @@ const styles = StyleSheet.create({
         borderColor: '#888',
         borderRadius:10,
         borderWidth:1
+    },
+    errors : {
+        alignSelf:"stretch",
+        padding:10,
+        marginHorizontal:20,
+        backgroundColor: "#C63461",
+        marginBottom: 20,
+    }, 
+    errorText: {
+        color:"white"
     }, 
     inlineContainer: {
         flexDirection: 'row',
