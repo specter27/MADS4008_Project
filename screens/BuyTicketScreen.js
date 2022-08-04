@@ -13,7 +13,6 @@ const BuyTicketScreen = ({navigation, route}) => {
   const [currentUserId, setCurrentUserId] = useState("")
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
-  const [errors, setErrors] = useState("");
   const [numberOfTickets, setNumberOfTickets] = useState(0)
   const [purchaseSubTotal, setPurchaseSubTotal] = useState(0)
   const [purchaseTax, setPurchaseTax] = useState(0)
@@ -60,7 +59,7 @@ const BuyTicketScreen = ({navigation, route}) => {
 
     // 1. Add the purchase in the Firebase (firestore)
     // - Form validation - Check for number tickets AND name
-    if(numberOfTickets > 0  && userName.trim() !== ""){
+    if(numberOfTickets > 0  && userName.trim() !== "" && userEmail.trim() !== ""){
         try {
             const purchaseToBeAdded = {
                 movieId: movie_id,
@@ -112,21 +111,6 @@ const BuyTicketScreen = ({navigation, route}) => {
     setPurchaseTotal(total)
   }
 
-  const validateInput = () => {
-    console.log("Validating the userEmail AND userName")
-    let result = true
-    if(userEmail.trim() === "" || userName.trim() === ""){
-
-        // Set error message
-        console.log(`Error Please provide valid values for the fields`)
-        // displays errors to the UI
-        setErrors("ERROR: Please provide valid values for the fields")
-        result = false
-    }
-    return result
-  }
-
-
   // ------------------------ View Template -----------------------
   return (
     <SafeAreaView style={styles.container}>
@@ -152,13 +136,6 @@ const BuyTicketScreen = ({navigation, route}) => {
                 onChangeText={setUserName}
             /> 
         </View>
-        {/* Errors Message Section */}
-        { errors ?  
-            <View style={styles.errors}>
-                <Text style={styles.errorText}>{errors}</Text>
-            </View>
-            : null 
-        }
 
         {/* Number of Ticket Section */}
         <Text style={styles.titleLabel}>Number of Tickets: </Text>
@@ -240,16 +217,6 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderWidth:1
     },
-    errors : {
-        alignSelf:"stretch",
-        padding:10,
-        marginHorizontal:20,
-        backgroundColor: "#C63461",
-        marginBottom: 20,
-    }, 
-    errorText: {
-        color:"white"
-    }, 
     inlineContainer: {
         flexDirection: 'row',
         justifyContent: 'start',
