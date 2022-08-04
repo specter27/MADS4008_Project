@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect, cloneElement } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text,TextInput, View, SafeAreaView, Pressable, Alert } from 'react-native';
 
 // Import for Firebase: auth service
@@ -57,17 +57,17 @@ const BuyTicketScreen = ({navigation, route}) => {
   }
   const purchasedButtonClicked = async () => {
     console.log("purchasedButton Clicked")
-    
-    if ( validateInput() ) {
 
-        // 1. Add the purchase in the Firebase (firestore)
+    // 1. Add the purchase in the Firebase (firestore)
+    // - Form validation - Check for number tickets AND name
+    if(numberOfTickets > 0  && userName.trim() !== ""){
         try {
             const purchaseToBeAdded = {
                 movieId: movie_id,
                 movieName: movie_title,
                 nameOnPurchase: userName, 
                 numTickets: parseInt(numberOfTickets),   // Int
-                total: parseFloat( purchaseTotal.toFixed(2) ), // Int
+                total: parseFloat( purchaseTotal.toFixed(2) ), // Float
                 userId: currentUserId
             }
             console.log(`Attemping to Add: `)
@@ -85,10 +85,11 @@ const BuyTicketScreen = ({navigation, route}) => {
         catch (err) {
             console.log(`${err.message}`)
         }
-
-    }
    
-
+    } else {
+        // - Display error alert
+        Alert.alert("All form fields must be filled before purchasing a ticket!")
+    }
   }
   // ---------------------- Helper Functions ----------------------------
 
@@ -271,8 +272,8 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         width:30,
         textAlign: 'center',
-        paddingTop: 10
-
+        paddingTop: 16,
+        marginHorizontal:6,
     },
     purchaseButton : {
         backgroundColor: "#3330e3",
